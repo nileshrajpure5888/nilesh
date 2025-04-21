@@ -1,0 +1,1507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image Compressor </title>
+  <style>
+    /* Variables */
+    :root {
+      --primary: #3b82f6;
+      --primary-hover: #2563eb;
+      --bg-light: #ffffff;
+      --bg-dark: #1f2937;
+      --text-light: #111827;
+      --text-dark: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-300: #d1d5db;
+      --gray-700: #374151;
+      --gray-800: #1f2937;
+      --success: #10b981;
+      --success-light: #34d399;
+      --error: #ef4444;
+      --whatsapp: #25D366;
+      --facebook: #3b5998;
+      --twitter: #1DA1F2;
+      --pinterest: #E60023;
+      --telegram: #0088cc;
+    }
+    
+    /* Base styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: var(--bg-light);
+      color: var(--text-light);
+      line-height: 1.5;
+      transition: background-color 0.3s, color 0.3s;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    body.dark {
+      background-color: var(--bg-dark);
+      color: var(--text-dark);
+    }
+    
+    a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+    }
+    
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+    
+    /* Header */
+    header {
+      background-color: var(--bg-light);
+      border-bottom: 1px solid var(--gray-200);
+      padding: 1rem 0;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+    
+    body.dark header {
+      background-color: var(--bg-dark);
+      border-bottom-color: var(--gray-700);
+    }
+    
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      font-weight: 600;
+      font-size: 1.25rem;
+      color: var(--text-light);
+    }
+    
+    body.dark .logo {
+      color: var(--text-dark);
+    }
+    
+    .theme-toggle {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      font-size: 1.25rem;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 9999px;
+    }
+    
+    .theme-toggle:hover {
+      background-color: var(--gray-100);
+    }
+    
+    body.dark .theme-toggle:hover {
+      background-color: var(--gray-700);
+    }
+    
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    .nav-link {
+      color: var(--text-light);
+      font-weight: 500;
+      font-size: 0.875rem;
+      padding: 0.5rem;
+    }
+    
+    body.dark .nav-link {
+      color: var(--text-dark);
+    }
+    
+    .nav-link:hover {
+      color: var(--primary);
+      text-decoration: none;
+    }
+    
+    .nav-button {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 0.25rem;
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      font-weight: 500;
+    }
+    
+    .nav-button:hover {
+      background-color: var(--primary-hover);
+    }
+    
+    /* Main */
+    main {
+      flex: 1;
+      padding: 2rem 0;
+    }
+    
+    .app-container {
+      background-color: var(--bg-light);
+      border-radius: 0.5rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      margin-bottom: 2rem;
+    }
+    
+    body.dark .app-container {
+      background-color: var(--gray-800);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    }
+    
+    /* Auth Pages */
+    .auth-container {
+      display: flex;
+      flex-direction: column;
+      max-width: 400px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background-color: var(--bg-light);
+      border-radius: 0.5rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    body.dark .auth-container {
+      background-color: var(--gray-800);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    }
+    
+    .auth-logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+    }
+    
+    .auth-title {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+    
+    .auth-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .form-label {
+      font-size: 0.875rem;
+      font-weight: 500;
+      margin-bottom: 0.25rem;
+    }
+    
+    .form-input {
+      padding: 0.5rem;
+      border-radius: 0.25rem;
+      border: 1px solid var(--gray-300);
+      background-color: var(--bg-light);
+      color: var(--text-light);
+      font-size: 0.875rem;
+    }
+    
+    body.dark .form-input {
+      background-color: var(--gray-800);
+      border-color: var(--gray-700);
+      color: var(--text-dark);
+    }
+    
+    .form-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
+    }
+    
+    .auth-button {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 0.25rem;
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      font-weight: 500;
+      margin-top: 0.5rem;
+    }
+    
+    .auth-button:hover {
+      background-color: var(--primary-hover);
+    }
+    
+    .auth-link {
+      text-align: center;
+      font-size: 0.875rem;
+      margin-top: 1rem;
+    }
+    
+    .error-message {
+      color: var(--error);
+      font-size: 0.875rem;
+      margin-top: 0.25rem;
+    }
+    
+    /* Tabs */
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid var(--gray-200);
+    }
+    
+    body.dark .tabs {
+      border-bottom-color: var(--gray-700);
+    }
+    
+    .tab {
+      flex: 1;
+      padding: 1rem;
+      text-align: center;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.3s;
+      font-weight: 500;
+    }
+    
+    .tab:hover {
+      background-color: var(--gray-100);
+      color: var(--primary);
+    }
+    
+    body.dark .tab:hover {
+      background-color: var(--gray-700);
+    }
+    
+    .tab.active {
+      border-bottom-color: var(--primary);
+      color: var(--primary);
+    }
+    
+    /* Upload area */
+    .upload-area {
+      border: 2px dashed var(--gray-300);
+      border-radius: 0.5rem;
+      padding: 2rem;
+      margin: 1.5rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .upload-area:hover {
+      border-color: var(--primary);
+      background-color: rgba(59, 130, 246, 0.05);
+    }
+    
+    body.dark .upload-area {
+      border-color: var(--gray-700);
+    }
+    
+    body.dark .upload-area:hover {
+      background-color: rgba(59, 130, 246, 0.1);
+    }
+    
+    .upload-icon {
+      font-size: 3rem;
+      color: var(--gray-300);
+      margin-bottom: 1rem;
+    }
+    
+    body.dark .upload-icon {
+      color: var(--gray-700);
+    }
+    
+    /* Button */
+    .button {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 0.25rem;
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      font-weight: 500;
+    }
+    
+    .button:hover {
+      background-color: var(--primary-hover);
+    }
+    
+    .download-button {
+      background-color: var(--success);
+    }
+    
+    .download-button:hover {
+      background-color: #059669;
+    }
+    
+    /* Preview */
+    .preview-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    @media (min-width: 768px) {
+      .preview-container {
+        flex-direction: row;
+      }
+    }
+    
+    .preview-box {
+      flex: 1;
+    }
+    
+    .preview-title {
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+    
+    .preview-image-container {
+      background-color: var(--gray-100);
+      border-radius: 0.5rem;
+      aspect-ratio: 1;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      margin-bottom: 0.5rem;
+    }
+    
+    body.dark .preview-image-container {
+      background-color: var(--gray-700);
+    }
+    
+    .preview-image {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+    
+    .preview-info {
+      font-size: 0.875rem;
+      color: var(--gray-700);
+    }
+    
+    body.dark .preview-info {
+      color: var(--gray-300);
+    }
+    
+    .savings {
+      color: var(--success);
+      font-weight: 500;
+    }
+    
+    body.dark .savings {
+      color: var(--success-light);
+    }
+    
+    /* Tool options */
+    .tool-options {
+      background-color: var(--gray-100);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      margin: 0 1.5rem 1.5rem;
+    }
+    
+    body.dark .tool-options {
+      background-color: var(--gray-700);
+    }
+    
+    .option-title {
+      font-weight: 500;
+      margin-bottom: 1rem;
+    }
+    
+    .option-row {
+      margin-bottom: 1rem;
+    }
+    
+    .option-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-size: 0.875rem;
+    }
+    
+    .option-slider-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+    
+    .slider {
+      width: 100%;
+      -webkit-appearance: none;
+      height: 6px;
+      border-radius: 5px;
+      background: var(--gray-300);
+      outline: none;
+    }
+    
+    .slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--primary);
+      cursor: pointer;
+    }
+    
+    .slider::-moz-range-thumb {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--primary);
+      cursor: pointer;
+    }
+    
+    .input {
+      width: 100%;
+      padding: 0.5rem;
+      border-radius: 0.25rem;
+      border: 1px solid var(--gray-300);
+      background-color: var(--bg-light);
+      color: var(--text-light);
+    }
+    
+    body.dark .input {
+      background-color: var(--gray-800);
+      border-color: var(--gray-700);
+      color: var(--text-dark);
+    }
+    
+    .checkbox-container {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    /* Footer actions */
+    .footer-actions {
+      display: flex;
+      justify-content: flex-end;
+      padding: 1rem 1.5rem;
+      gap: 0.5rem;
+    }
+    
+    /* Share options */
+    .share-container {
+      margin: 0 1.5rem 1.5rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--gray-200);
+    }
+    
+    body.dark .share-container {
+      border-top-color: var(--gray-700);
+    }
+    
+    .share-title {
+      font-weight: 500;
+      margin-bottom: 0.75rem;
+      font-size: 0.9rem;
+    }
+    
+    .share-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    
+    .share-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 0.25rem;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    
+    .share-button:hover {
+      opacity: 0.9;
+    }
+    
+    .share-whatsapp { background-color: var(--whatsapp); }
+    .share-facebook { background-color: var(--facebook); }
+    .share-twitter { background-color: var(--twitter); }
+    .share-pinterest { background-color: var(--pinterest); }
+    .share-telegram { background-color: var(--telegram); }
+    
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: var(--gray-800);
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.25rem;
+      font-size: 0.875rem;
+      z-index: 100;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.3s, transform 0.3s;
+    }
+    
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    /* Footer */
+    footer {
+      background-color: var(--gray-100);
+      padding: 2rem 0;
+      border-top: 1px solid var(--gray-200);
+      margin-top: auto;
+    }
+    
+    body.dark footer {
+      background-color: var(--gray-800);
+      border-top-color: var(--gray-700);
+    }
+    
+    .footer-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    
+    @media (min-width: 768px) {
+      .footer-content {
+        flex-direction: row;
+        justify-content: space-between;
+        text-align: left;
+      }
+    }
+    
+    .footer-logo {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 1rem;
+    }
+    
+    @media (min-width: 768px) {
+      .footer-logo {
+        margin-bottom: 0;
+      }
+    }
+    
+    .footer-logo-title {
+      display: flex;
+      align-items: center;
+      font-weight: 600;
+      font-size: 1.25rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .footer-tagline {
+      font-size: 0.875rem;
+      color: var(--gray-500);
+    }
+    
+    .footer-links {
+      display: flex;
+      gap: 2rem;
+    }
+    
+    .footer-link {
+      color: var(--gray-700);
+      font-size: 0.875rem;
+    }
+    
+    body.dark .footer-link {
+      color: var(--gray-300);
+    }
+    
+    .footer-copyright {
+      text-align: center;
+      margin-top: 1.5rem;
+      font-size: 0.875rem;
+      color: var(--gray-500);
+    }
+    
+    /* Utils */
+    .hidden {
+      display: none !important;
+    }
+    
+    .overlay {
+      position: absolute;
+      inset: 0;
+      background-color: rgba(255, 255, 255, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 5;
+    }
+    
+    body.dark .overlay {
+      background-color: rgba(31, 41, 55, 0.8);
+    }
+    
+    .spinner {
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top: 2px solid white;
+      width: 1rem;
+      height: 1rem;
+      animation: spin 1s linear infinite;
+      display: inline-block;
+      margin-right: 0.5rem;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container header-content">
+      <div class="logo">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" style="margin-right: 0.75rem;">
+          <rect width="24" height="24" rx="4" fill="currentColor" opacity="0.1"/>
+          <path d="M6 6h12v8H6z" fill="currentColor"/>
+          <circle cx="9" cy="9" r="1.5" fill="white"/>
+          <path d="M18 6l-4 4-3-3-5 5v3h12V6z" fill="currentColor" opacity="0.5"/>
+        </svg>
+        <span>Image Compressor</span>
+      </div>
+      <div class="nav-links">
+        <a href="#" class="nav-link" id="homePage">Home</a>
+        <a href="#" class="nav-link" id="loginPage">Login</a>
+        <a href="#" class="nav-link" id="signupPage">Sign Up</a>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">🌙</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Login Page -->
+    <div id="login-container" class="auth-container hidden">
+      <div class="auth-logo">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none">
+          <rect width="24" height="24" rx="4" fill="currentColor" opacity="0.1"/>
+          <path d="M6 6h12v8H6z" fill="currentColor"/>
+          <circle cx="9" cy="9" r="1.5" fill="white"/>
+          <path d="M18 6l-4 4-3-3-5 5v3h12V6z" fill="currentColor" opacity="0.5"/>
+        </svg>
+      </div>
+      <h2 class="auth-title">Login to Image Compressor</h2>
+      <form id="login-form" class="auth-form">
+        <div class="form-group">
+          <label for="login-email" class="form-label">Email</label>
+          <input type="email" id="login-email" class="form-input" placeholder="your@email.com" required>
+        </div>
+        <div class="form-group">
+          <label for="login-password" class="form-label">Password</label>
+          <input type="password" id="login-password" class="form-input" placeholder="••••••••" required>
+        </div>
+        <button type="submit" class="auth-button">Login</button>
+        <div id="login-error" class="error-message hidden"></div>
+      </form>
+      <div class="auth-link">
+        Don't have an account? <a href="#" id="to-signup">Sign up</a>
+      </div>
+    </div>
+
+    <!-- Signup Page -->
+    <div id="signup-container" class="auth-container hidden">
+      <div class="auth-logo">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none">
+          <rect width="24" height="24" rx="4" fill="currentColor" opacity="0.1"/>
+          <path d="M6 6h12v8H6z" fill="currentColor"/>
+          <circle cx="9" cy="9" r="1.5" fill="white"/>
+          <path d="M18 6l-4 4-3-3-5 5v3h12V6z" fill="currentColor" opacity="0.5"/>
+        </svg>
+      </div>
+      <h2 class="auth-title">Create an Account</h2>
+      <form id="signup-form" class="auth-form">
+        <div class="form-group">
+          <label for="signup-name" class="form-label">Full Name</label>
+          <input type="text" id="signup-name" class="form-input" placeholder="John Doe" required>
+        </div>
+        <div class="form-group">
+          <label for="signup-email" class="form-label">Email</label>
+          <input type="email" id="signup-email" class="form-input" placeholder="your@email.com" required>
+        </div>
+        <div class="form-group">
+          <label for="signup-password" class="form-label">Password</label>
+          <input type="password" id="signup-password" class="form-input" placeholder="••••••••" required>
+        </div>
+        <div class="form-group">
+          <label for="signup-confirm" class="form-label">Confirm Password</label>
+          <input type="password" id="signup-confirm" class="form-input" placeholder="••••••••" required>
+        </div>
+        <button type="submit" class="auth-button">Sign Up</button>
+        <div id="signup-error" class="error-message hidden"></div>
+      </form>
+      <div class="auth-link">
+        Already have an account? <a href="#" id="to-login">Login</a>
+      </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="app-container" class="app-container">
+      <div class="tabs">
+        <div class="tab active" data-tab="compress">Compress</div>
+        <div class="tab" data-tab="resize">Resize</div>
+        <div class="tab" data-tab="convert">Convert</div>
+      </div>
+
+      <div class="upload-area" id="uploadArea">
+        <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp" class="hidden">
+        <div id="emptyState">
+          <div class="upload-icon">📤</div>
+          <h3>Drop your image here</h3>
+          <p>Supports JPEG, PNG, and WebP</p>
+          <button class="button" id="selectFileBtn">Select File</button>
+        </div>
+
+        <div id="previewState" class="hidden">
+          <div class="preview-container">
+            <div class="preview-box">
+              <h4 class="preview-title">Original</h4>
+              <div class="preview-image-container">
+                <img id="originalImage" class="preview-image" alt="Original image">
+              </div>
+              <div class="preview-info" id="originalInfo"></div>
+            </div>
+
+            <div class="preview-box">
+              <h4 class="preview-title">Processed</h4>
+              <div class="preview-image-container">
+                <div id="processingOverlay" class="overlay hidden">
+                  <div class="spinner"></div>
+                </div>
+                <img id="processedImage" class="preview-image hidden" alt="Processed image">
+                <div id="processingPlaceholder">Waiting to process...</div>
+              </div>
+              <div class="preview-info" id="processedInfo"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tool-options" id="compressOptions">
+        <h4 class="option-title">Compression Settings</h4>
+        <div class="option-row">
+          <div class="option-slider-container">
+            <label for="qualitySlider" class="option-label">Quality</label>
+            <span id="qualityValue">80%</span>
+          </div>
+          <input 
+            type="range" 
+            id="qualitySlider" 
+            class="slider" 
+            min="0" 
+            max="100" 
+            value="80"
+          >
+        </div>
+        <div class="option-row">
+          <div class="checkbox-container">
+            <input type="checkbox" id="smartCompression" checked>
+            <label for="smartCompression" class="option-label">
+              Use smart compression (automatically balance quality and size)
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="tool-options hidden" id="resizeOptions">
+        <h4 class="option-title">Resize Settings</h4>
+        <div class="option-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div>
+            <label for="widthInput" class="option-label">Width (px)</label>
+            <input type="number" id="widthInput" placeholder="Width" class="input" min="1">
+          </div>
+          <div>
+            <label for="heightInput" class="option-label">Height (px)</label>
+            <input type="number" id="heightInput" placeholder="Height" class="input" min="1">
+          </div>
+        </div>
+        <div class="option-row">
+          <div class="checkbox-container">
+            <input type="checkbox" id="lockAspectRatio" checked>
+            <label for="lockAspectRatio" class="option-label">
+              Lock aspect ratio
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="tool-options hidden" id="convertOptions">
+        <h4 class="option-title">Conversion Settings</h4>
+        <div class="option-row">
+          <label class="option-label">Output Format</label>
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.5rem;">
+            <label class="checkbox-container">
+              <input type="radio" name="outputFormat" value="jpeg" checked> JPEG
+            </label>
+            <label class="checkbox-container">
+              <input type="radio" name="outputFormat" value="png"> PNG
+            </label>
+            <label class="checkbox-container">
+              <input type="radio" name="outputFormat" value="webp"> WebP
+            </label>
+          </div>
+        </div>
+        <div id="jpegQualityContainer" class="option-row">
+          <div class="option-slider-container">
+            <label for="jpegQualitySlider" class="option-label">JPEG Quality</label>
+            <span id="jpegQualityValue">90%</span>
+          </div>
+          <input 
+            type="range" 
+            id="jpegQualitySlider" 
+            class="slider" 
+            min="0" 
+            max="100" 
+            value="90"
+          >
+        </div>
+        <div id="webpQualityContainer" class="option-row hidden">
+          <div class="option-slider-container">
+            <label for="webpQualitySlider" class="option-label">WebP Quality</label>
+            <span id="webpQualityValue">80%</span>
+          </div>
+          <input 
+            type="range" 
+            id="webpQualitySlider" 
+            class="slider" 
+            min="0" 
+            max="100" 
+            value="80"
+          >
+        </div>
+      </div>
+
+      <div class="footer-actions">
+        <button id="processBtn" class="button">Compress Image</button>
+        <button id="downloadBtn" class="button download-button hidden">Download Processed Image</button>
+      </div>
+      
+      <!-- Share Options (Initially Hidden) -->
+      <div id="shareContainer" class="share-container hidden">
+        <h4 class="share-title">Share Your Processed Image</h4>
+        <div class="share-buttons">
+          <button class="share-button share-whatsapp" id="shareWhatsApp" title="Share on WhatsApp">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="white">
+              <path d="M17.498 14.382c-.301-.15-1.767-.867-2.04-.966-.273-.101-.473-.15-.673.15-.197.295-.771.964-.944 1.162-.175.195-.349.21-.646.075-.3-.15-1.263-.465-2.403-1.485-.888-.795-1.484-1.77-1.66-2.07-.174-.3-.019-.465.13-.615.136-.135.301-.345.451-.523.146-.181.194-.301.297-.496.1-.21.049-.375-.025-.524-.075-.15-.672-1.62-.922-2.206-.24-.584-.487-.51-.672-.51-.172-.015-.371-.015-.571-.015-.2 0-.523.074-.797.359-.273.3-1.045 1.02-1.045 2.475s1.07 2.865 1.219 3.075c.149.195 2.105 3.195 5.1 4.485.714.3 1.27.48 1.704.629.714.227 1.365.195 1.88.121.574-.091 1.767-.721 2.016-1.426.255-.705.255-1.29.18-1.425-.074-.135-.27-.21-.57-.345m-5.446 7.443h-.016c-1.77 0-3.524-.48-5.055-1.38l-.36-.214-3.75.975 1.005-3.645-.239-.375c-.99-1.576-1.516-3.391-1.516-5.26 0-5.445 4.455-9.885 9.942-9.885 2.654 0 5.145 1.035 7.021 2.91 1.875 1.859 2.909 4.35 2.909 6.99-.004 5.445-4.455 9.885-9.935 9.885M20.52 3.449C18.24 1.245 15.24 0 12.045 0 5.463 0 .104 5.334.101 11.893c0 2.096.549 4.14 1.595 5.945L0 24l6.335-1.652c1.746.943 3.71 1.444 5.71 1.447h.006c6.585 0 11.946-5.336 11.949-11.896 0-3.176-1.24-6.165-3.495-8.411"/>
+            </svg>
+          </button>
+          <button class="share-button share-facebook" id="shareFacebook" title="Share on Facebook">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="white">
+              <path d="M9.03177,23 L9,13 L5,13 L5,9 L9,9 L9,6.5 C9,2.7886 11.2886,1 14.5,1 C16.0343,1 17.3476,1.10711 17.8,1.2 L17.8,5 L15.5,5 C13.6429,5 13,5.85714 13,7.5 L13,9 L18,9 L17,13 L13,13 L13.0318,23 L9.03177,23 Z"/>
+            </svg>
+          </button>
+          <button class="share-button share-twitter" id="shareTwitter" title="Share on Twitter">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="white">
+              <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+            </svg>
+          </button>
+          <button class="share-button share-pinterest" id="sharePinterest" title="Share on Pinterest">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="white">
+              <path d="M12 0C5.373 0 0 5.372 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738.098.119.112.224.083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.631-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12 0-6.628-5.373-12-12-12z"/>
+            </svg>
+          </button>
+          <button class="share-button share-telegram" id="shareTelegram" title="Share on Telegram">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="white">
+              <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.6 0 12 0zm5.9 8.1l-2.1 9.9c-.2.8-.6 1-1.3.6l-3.5-2.6-1.7 1.7c-.2.2-.4.3-.6.3l.2-3.6 6.5-5.9c.3-.2-.1-.4-.4-.2l-8 5.1-3.5-1.1c-.7-.2-.7-.7.2-1.1l13.7-5.3c.6-.2 1.1.1.9.8z"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container footer-content">
+      <div class="footer-logo">
+        <div class="footer-logo-title">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style="margin-right: 0.5rem;">
+            <rect width="24" height="24" rx="4" fill="currentColor" opacity="0.1"/>
+            <path d="M6 6h12v8H6z" fill="currentColor"/>
+            <circle cx="9" cy="9" r="1.5" fill="white"/>
+            <path d="M18 6l-4 4-3-3-5 5v3h12V6z" fill="currentColor" opacity="0.5"/>
+          </svg>
+          <span>Image Compressor</span>
+        </div>
+        <p class="footer-tagline">Free online image tools for everyone.</p>
+      </div>
+      <div class="footer-links">
+        <a href="#" class="footer-link">Privacy Policy</a>
+        <a href="#" class="footer-link">Terms of Use</a>
+        <a href="mailto:contact@imagecompressor.com" class="footer-link">Contact</a>
+      </div>
+    </div>
+    <div class="footer-copyright">
+      &copy; <span id="currentYear"></span> Image Compressor. All rights reserved.
+    </div>
+  </footer>
+
+  <!-- Toast notification -->
+  <div class="toast" id="toast">Link copied to clipboard!</div>
+
+  <script>
+    // DOM Elements
+    const themeToggle = document.getElementById('themeToggle');
+    const fileInput = document.getElementById('fileInput');
+    const selectFileBtn = document.getElementById('selectFileBtn');
+    const uploadArea = document.getElementById('uploadArea');
+    const emptyState = document.getElementById('emptyState');
+    const previewState = document.getElementById('previewState');
+    const originalImage = document.getElementById('originalImage');
+    const processedImage = document.getElementById('processedImage');
+    const processingPlaceholder = document.getElementById('processingPlaceholder');
+    const originalInfo = document.getElementById('originalInfo');
+    const processedInfo = document.getElementById('processedInfo');
+    const processBtn = document.getElementById('processBtn');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const shareContainer = document.getElementById('shareContainer');
+    const tabs = document.querySelectorAll('.tab');
+    const toolOptions = document.querySelectorAll('.tool-options');
+    const processingOverlay = document.getElementById('processingOverlay');
+    const toast = document.getElementById('toast');
+    const currentYear = document.getElementById('currentYear');
+    const qualitySlider = document.getElementById('qualitySlider');
+    const qualityValue = document.getElementById('qualityValue');
+    const jpegQualitySlider = document.getElementById('jpegQualitySlider');
+    const jpegQualityValue = document.getElementById('jpegQualityValue');
+    const webpQualitySlider = document.getElementById('webpQualitySlider');
+    const webpQualityValue = document.getElementById('webpQualityValue');
+    const widthInput = document.getElementById('widthInput');
+    const heightInput = document.getElementById('heightInput');
+    const lockAspectRatio = document.getElementById('lockAspectRatio');
+    const formatRadios = document.querySelectorAll('input[name="outputFormat"]');
+    const jpegQualityContainer = document.getElementById('jpegQualityContainer');
+    const webpQualityContainer = document.getElementById('webpQualityContainer');
+    
+    // Auth Elements
+    const appContainer = document.getElementById('app-container');
+    const loginContainer = document.getElementById('login-container');
+    const signupContainer = document.getElementById('signup-container');
+    const loginForm = document.getElementById('login-form');
+    const signupForm = document.getElementById('signup-form');
+    const loginError = document.getElementById('login-error');
+    const signupError = document.getElementById('signup-error');
+    const toSignup = document.getElementById('to-signup');
+    const toLogin = document.getElementById('to-login');
+    const homePageLink = document.getElementById('homePage');
+    const loginPageLink = document.getElementById('loginPage');
+    const signupPageLink = document.getElementById('signupPage');
+    
+    // Set current year in footer
+    currentYear.textContent = new Date().getFullYear();
+    
+    // App State
+    let activeTab = 'compress';
+    let uploadedFile = null;
+    let dimensions = { width: 0, height: 0 };
+    let aspectRatio = 1;
+    let processedImageData = null;
+    let isProcessing = false;
+    let shareableUrl = '';
+    let currentPage = 'home';
+    let isLoggedIn = false;
+    let currentUser = null;
+    
+    // Initialize theme
+    const initializeTheme = () => {
+      if (localStorage.getItem('theme') === 'dark' || 
+          (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.body.classList.add('dark');
+        themeToggle.textContent = '☀️';
+      }
+    };
+    
+    // Initialize auth state
+    const initializeAuth = () => {
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        currentUser = JSON.parse(storedUser);
+        isLoggedIn = true;
+        updateAuthUI();
+      }
+    };
+    
+    // Show appropriate page based on nav clicks
+    const showPage = (page) => {
+      currentPage = page;
+      
+      // Hide all pages
+      appContainer.classList.add('hidden');
+      loginContainer.classList.add('hidden');
+      signupContainer.classList.add('hidden');
+      
+      // Show selected page
+      if (page === 'home') {
+        appContainer.classList.remove('hidden');
+      } else if (page === 'login') {
+        loginContainer.classList.remove('hidden');
+      } else if (page === 'signup') {
+        signupContainer.classList.remove('hidden');
+      }
+    };
+    
+    // Update UI based on auth state
+    const updateAuthUI = () => {
+      if (isLoggedIn && currentUser) {
+        loginPageLink.classList.add('hidden');
+        signupPageLink.classList.add('hidden');
+        showPage('home');
+      } else {
+        loginPageLink.classList.remove('hidden');
+        signupPageLink.classList.remove('hidden');
+      }
+    };
+    
+    // Initialize page
+    initializeTheme();
+    initializeAuth();
+    showPage('home');
+    
+    // Navigation
+    homePageLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      showPage('home');
+    });
+    
+    loginPageLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      showPage('login');
+    });
+    
+    signupPageLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      showPage('signup');
+    });
+    
+    toSignup.addEventListener('click', (e) => {
+      e.preventDefault();
+      showPage('signup');
+    });
+    
+    toLogin.addEventListener('click', (e) => {
+      e.preventDefault();
+      showPage('login');
+    });
+    
+    // Auth forms
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = document.getElementById('login-email').value;
+      const password = document.getElementById('login-password').value;
+      
+      // Simple validation
+      if (!email || !password) {
+        loginError.textContent = 'Email and password are required';
+        loginError.classList.remove('hidden');
+        return;
+      }
+      
+      // In a real app, this would call an API endpoint
+      // For demo purposes, simulate login with localStorage
+      const users = JSON.parse(localStorage.getItem('users') || '[]');
+      const user = users.find(u => u.email === email && u.password === password);
+      
+      if (user) {
+        // Login successful
+        const userInfo = {
+          id: user.id,
+          name: user.name,
+          email: user.email
+        };
+        
+        localStorage.setItem('user', JSON.stringify(userInfo));
+        currentUser = userInfo;
+        isLoggedIn = true;
+        
+        updateAuthUI();
+        showPage('home');
+        
+        // Show toast
+        showToast('Login successful!');
+      } else {
+        // Login failed
+        loginError.textContent = 'Invalid email or password';
+        loginError.classList.remove('hidden');
+      }
+    });
+    
+    signupForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('signup-name').value;
+      const email = document.getElementById('signup-email').value;
+      const password = document.getElementById('signup-password').value;
+      const confirm = document.getElementById('signup-confirm').value;
+      
+      // Simple validation
+      if (!name || !email || !password) {
+        signupError.textContent = 'All fields are required';
+        signupError.classList.remove('hidden');
+        return;
+      }
+      
+      if (password !== confirm) {
+        signupError.textContent = 'Passwords do not match';
+        signupError.classList.remove('hidden');
+        return;
+      }
+      
+      // In a real app, this would call an API endpoint
+      // For demo purposes, simulate signup with localStorage
+      let users = JSON.parse(localStorage.getItem('users') || '[]');
+      
+      // Check if email already exists
+      if (users.some(user => user.email === email)) {
+        signupError.textContent = 'Email already in use';
+        signupError.classList.remove('hidden');
+        return;
+      }
+      
+      // Create new user
+      const newUser = {
+        id: Date.now(),
+        name,
+        email,
+        password
+      };
+      
+      users.push(newUser);
+      localStorage.setItem('users', JSON.stringify(users));
+      
+      // Auto login
+      const userInfo = {
+        id: newUser.id,
+        name: newUser.name,
+        email: newUser.email
+      };
+      
+      localStorage.setItem('user', JSON.stringify(userInfo));
+      currentUser = userInfo;
+      isLoggedIn = true;
+      
+      updateAuthUI();
+      showPage('home');
+      
+      // Show toast
+      showToast('Account created successfully!');
+    });
+    
+    // Theme Toggle
+    themeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('dark');
+      themeToggle.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
+      localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+    });
+    
+    // Tab Switching
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        activeTab = tab.dataset.tab;
+        toolOptions.forEach(panel => panel.classList.add('hidden'));
+        document.getElementById(`${activeTab}Options`).classList.remove('hidden');
+        processBtn.textContent = `${activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} Image`;
+      });
+    });
+    
+    // File Selection
+    selectFileBtn.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', handleFileSelect);
+    
+    // Drag and Drop
+    uploadArea.addEventListener('dragover', e => {
+      e.preventDefault();
+      e.stopPropagation();
+      uploadArea.style.borderColor = 'var(--primary)';
+      uploadArea.style.backgroundColor = 'rgba(59, 130, 246, 0.05)';
+    });
+    
+    uploadArea.addEventListener('dragleave', e => {
+      e.preventDefault();
+      e.stopPropagation();
+      uploadArea.style.borderColor = '';
+      uploadArea.style.backgroundColor = '';
+    });
+    
+    uploadArea.addEventListener('drop', e => {
+      e.preventDefault();
+      e.stopPropagation();
+      uploadArea.style.borderColor = '';
+      uploadArea.style.backgroundColor = '';
+      if (e.dataTransfer.files.length) {
+        handleFileSelect({ target: { files: e.dataTransfer.files } });
+      }
+    });
+    
+    // Buttons
+    processBtn.addEventListener('click', processImage);
+    downloadBtn.addEventListener('click', downloadImage);
+    
+    // Sliders
+    qualitySlider.addEventListener('input', e => {
+      qualityValue.textContent = `${e.target.value}%`;
+    });
+    
+    jpegQualitySlider.addEventListener('input', e => {
+      jpegQualityValue.textContent = `${e.target.value}%`;
+    });
+    
+    webpQualitySlider.addEventListener('input', e => {
+      webpQualityValue.textContent = `${e.target.value}%`;
+    });
+    
+    // Format Selection
+    formatRadios.forEach(radio => {
+      radio.addEventListener('change', () => {
+        const format = radio.value;
+        jpegQualityContainer.classList.toggle('hidden', format !== 'jpeg');
+        webpQualityContainer.classList.toggle('hidden', format !== 'webp');
+      });
+    });
+    
+    // Resize Inputs
+    widthInput.addEventListener('input', () => {
+      if (lockAspectRatio.checked) {
+        const newWidth = parseInt(widthInput.value);
+        if (!isNaN(newWidth)) {
+          heightInput.value = Math.round(newWidth / aspectRatio);
+        }
+      }
+    });
+    
+    heightInput.addEventListener('input', () => {
+      if (lockAspectRatio.checked) {
+        const newHeight = parseInt(heightInput.value);
+        if (!isNaN(newHeight)) {
+          widthInput.value = Math.round(newHeight * aspectRatio);
+        }
+      }
+    });
+    
+    // Share buttons
+    document.getElementById('shareWhatsApp').addEventListener('click', () => shareVia('whatsapp'));
+    document.getElementById('shareFacebook').addEventListener('click', () => shareVia('facebook'));
+    document.getElementById('shareTwitter').addEventListener('click', () => shareVia('twitter'));
+    document.getElementById('sharePinterest').addEventListener('click', () => shareVia('pinterest'));
+    document.getElementById('shareTelegram').addEventListener('click', () => shareVia('telegram'));
+    
+    // Functions
+    function handleFileSelect(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      
+      if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+        showToast('Please upload a JPEG, PNG, or WebP image.');
+        return;
+      }
+      
+      uploadedFile = file;
+      const reader = new FileReader();
+      reader.onload = e => {
+        originalImage.src = e.target.result;
+        originalImage.onload = () => {
+          dimensions.width = originalImage.naturalWidth;
+          dimensions.height = originalImage.naturalHeight;
+          aspectRatio = dimensions.width / dimensions.height;
+          
+          emptyState.classList.add('hidden');
+          previewState.classList.remove('hidden');
+          processedImage.classList.add('hidden');
+          processingPlaceholder.classList.remove('hidden');
+          
+          originalInfo.textContent = `Size: ${formatFileSize(file.size)} • ${dimensions.width} × ${dimensions.height} px`;
+          widthInput.value = dimensions.width;
+          heightInput.value = dimensions.height;
+          
+          processBtn.classList.remove('hidden');
+          downloadBtn.classList.add('hidden');
+          shareContainer.classList.add('hidden');
+        };
+      };
+      reader.readAsDataURL(file);
+    }
+    
+    function processImage() {
+      if (!uploadedFile || isProcessing) return;
+      
+      isProcessing = true;
+      processBtn.innerHTML = `<span class="spinner"></span>Processing...`;
+      processingOverlay.classList.remove('hidden');
+      
+      // Simulate processing
+      setTimeout(() => {
+        // In a real app, this would send the image to a server for processing
+        // Here we'll simulate processing with a random reduction
+        const qualityReduction = (100 - parseInt(qualitySlider.value)) / 100;
+        const processedSize = Math.floor(uploadedFile.size * (1 - qualityReduction * 0.7));
+        
+        let processedWidth = dimensions.width;
+        let processedHeight = dimensions.height;
+        
+        if (activeTab === 'resize') {
+          processedWidth = parseInt(widthInput.value) || dimensions.width;
+          processedHeight = parseInt(heightInput.value) || dimensions.height;
+        }
+        
+        let format = uploadedFile.type.split('/')[1];
+        if (activeTab === 'convert') {
+          format = document.querySelector('input[name="outputFormat"]:checked').value;
+        }
+        
+        processedImageData = {
+          url: originalImage.src, // In a real app, this would be a new URL
+          size: processedSize,
+          width: processedWidth,
+          height: processedHeight,
+          format: format
+        };
+        
+        processedImage.src = processedImageData.url;
+        processedImage.classList.remove('hidden');
+        processingPlaceholder.classList.add('hidden');
+        
+        const reduction = Math.round((1 - processedSize / uploadedFile.size) * 100);
+        processedInfo.innerHTML = `Size: ${formatFileSize(processedSize)} • ${processedWidth} × ${processedHeight} px <span class="savings">• ${reduction}% smaller</span>`;
+        
+        processBtn.classList.add('hidden');
+        downloadBtn.classList.remove('hidden');
+        downloadBtn.textContent = `Download ${activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}ed Image`;
+        
+        shareContainer.classList.remove('hidden');
+        
+        // Generate "shareable" URL
+        shareableUrl = `https://imagecompressor.com/share/${Math.random().toString(36).substring(2, 8)}`;
+        
+        isProcessing = false;
+        processingOverlay.classList.add('hidden');
+      }, 1500);
+    }
+    
+    function downloadImage() {
+      if (!processedImageData) return;
+      
+      const link = document.createElement('a');
+      link.href = processedImageData.url;
+      
+      const originalName = uploadedFile.name;
+      const extension = processedImageData.format;
+      const baseName = originalName.split('.').slice(0, -1).join('.');
+      
+      let fileName;
+      switch (activeTab) {
+        case 'compress':
+          fileName = `${baseName}-compressed.${extension}`;
+          break;
+        case 'resize':
+          fileName = `${baseName}-${processedImageData.width}x${processedImageData.height}.${extension}`;
+          break;
+        case 'convert':
+          fileName = `${baseName}.${extension}`;
+          break;
+      }
+      
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+    
+    function shareVia(platform) {
+      if (!processedImageData) return;
+      
+      // Build share text
+      const shareText = `Check out this image I processed with Image Compressor! ${activeTab === 'compress' ? 'Compressed' : activeTab === 'resize' ? 'Resized' : 'Converted'} from ${formatFileSize(uploadedFile.size)} to ${formatFileSize(processedImageData.size)}.`;
+      
+      // Share URLs for different platforms
+      let shareUrl = '';
+      
+      switch(platform) {
+        case 'whatsapp':
+          shareUrl = `https://wa.me/?text=${encodeURIComponent(shareText + ' ' + shareableUrl)}`;
+          break;
+        case 'facebook':
+          shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareableUrl)}&quote=${encodeURIComponent(shareText)}`;
+          break;
+        case 'twitter':
+          shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareableUrl)}`;
+          break;
+        case 'pinterest':
+          shareUrl = `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(shareableUrl)}&description=${encodeURIComponent(shareText)}&media=${encodeURIComponent(processedImageData.url)}`;
+          break;
+        case 'telegram':
+          shareUrl = `https://t.me/share/url?url=${encodeURIComponent(shareableUrl)}&text=${encodeURIComponent(shareText)}`;
+          break;
+      }
+      
+      if (shareUrl) {
+        window.open(shareUrl, '_blank');
+      }
+    }
+    
+    function formatFileSize(bytes) {
+      if (bytes < 1024) return bytes + ' B';
+      else if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+      else return (bytes / 1048576).toFixed(1) + ' MB';
+    }
+    
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add('show');
+      
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+  </script>
+</body>
+</html>
